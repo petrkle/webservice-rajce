@@ -1,0 +1,40 @@
+#!/usr/bin/perl -w
+
+use strict;
+use WWW::Mechanize;
+use File::Basename;
+use File::Path qw(make_path);
+
+my $vzor="^http:\/\/(.*)\.rajce\.idnes\.cz\/(.*)";
+
+if(!@ARGV or $ARGV[0] !~ /$vzor/){
+	print "Usage:\n";
+	print "$0 http://uzivatel.rajce.idnes.cz/nazevalba/\n";
+	exit;
+}
+
+my $username = $ARGV[0];
+$username =~ s/$vzor/$1/;
+
+my $album = $ARGV[0];
+$album =~ s/$vzor/$2/;
+
+my $url = "http://$username.rajce.idnes.cz/$album";
+
+my $bot = WWW::Mechanize->new(autocheck => 1, agent => 'Mozilla/5.0 (Windows NT 5.0; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0');
+$bot->add_header('Accept-Encoding'=>'text/html');
+$bot->cookie_jar(HTTP::Cookies->new());
+
+my $gal = $bot->get($url);
+
+my $storageurl = $gal->content();
+$storageurl =~ s/.*var storage = "([^"]*)";.*/$1/s;
+
+my @images = $bot->find_all_links(tag => "a", url_regex => qr/$storageurl/ );
+
+make_path("$username/$album");
+
+foreach my $imglink (@images){
+	$bot->get($imglink->url, ':content_file' => "$username/$album/".basename($imglink->url()) );
+	sleep 1;
+}
