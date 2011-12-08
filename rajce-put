@@ -1,0 +1,125 @@
+#!/usr/bin/perl -w
+
+use strict;
+use WWW::Mechanize;
+use File::Basename;
+use XML::Simple;
+use Net::Netrc;
+use Digest::MD5 qw(md5_hex);
+use Getopt::Std;
+use File::Temp qw(tempdir);
+use File::Copy;
+use File::Basename;
+use Image::Size;
+
+my %opts;
+getopt('t:', \%opts);  
+
+my $api = 'http://www.rajce.idnes.cz/liveAPI/index.php';
+my $xmldec = '<?xml version="1.0" encoding="utf-8"?>';
+my $maxwidth = 800;
+my $maxheight = 600;
+
+if(!@ARGV or !$opts{t}){
+	print "Usage: rajce-put -t 'Title' file.jpg file2.jpg ...\n";
+	exit;
+}
+
+my $mach = Net::Netrc->lookup($api);
+my ($mail, $password, $account) = $mach->lpa;
+
+my $bot = WWW::Mechanize->new(autocheck => 1, agent => 'github.com/petrkle/rajce');
+$bot->add_header('Accept-Encoding'=>'text/html');
+$bot->add_header('Accept-Charset'=>'utf-8');
+$bot->add_header('Accept-Language'=>'cs');
+$bot->cookie_jar(HTTP::Cookies->new());
+
+my $login = {'request'=>{
+		'command'=>['login'],
+		'parameters'=>{
+			'clientID'=>['rajce-put'],
+			'currentVersion'=>['0.0.1'],
+			'lang'=>['cs_CZ'],
+			'login'=>[$mail],
+			'password'=>[md5_hex($password)]
+		},
+	}
+};
+
+
+my $response = $bot->post($api, {'data' => XMLout($login, KeepRoot => 1, XMLDecl => $xmldec)});
+
+my $login_resp = XMLin($response->content());
+
+my $listalbums = {'request'=>{
+		'command'=>['getAlbumList'],
+		'parameters'=>{
+			'token'=>[$login_resp->{sessionToken}]
+		},
+	}
+};
+
+
+my $list = $bot->post($api, {'data' => XMLout($listalbums, KeepRoot => 1, XMLDecl => $xmldec)});
+
+my $createalbum = {'request'=>{
+		'command'=>['createAlbum'],
+		'parameters'=>{
+			'token'=>[$login_resp->{sessionToken}],
+			'albumName'=>[$opts{t}],
+			'albumDescription'=>[''],
+			'albumVisible'=>['1']
+		},
+	}
+};
+
+
+my $newalbum = $bot->post($api, {'data' => XMLout($createalbum, KeepRoot => 1, XMLDecl => $xmldec)});
+
+my $album = XMLin($newalbum->content());
+
+my $openalbum  = {'request'=>{
+		'command'=>['openAlbum'],
+		'parameters'=>{
+			'token'=>[$login_resp->{sessionToken}],
+			'albumID'=>[$album->{albumID}],
+		},
+	}
+};
+
+my $open = $bot->post($api, {'data' => XMLout($openalbum, KeepRoot => 1, XMLDecl => $xmldec)});
+
+
+my $tempdir = tempdir('rajce.tempXXXXX', CLEANUP => 1);
+foreach my $file(@ARGV){
+	my $filename = basename($file);
+	copy("$file","$tempdir/$filename");
+	system("convert -resize 800x600\\> \"$tempdir/$filename\" \"$tempdir/$filename\"\n");
+	my ($width, $height) = imgsize("$tempdir/$filename");
+	system("convert -resize 100x100^ -gravity center -extent 100x100 \"$tempdir/$filename\" \"$tempdir/thumb.$filename\"\n");
+
+	my $newpicture =  {'request'=>{
+			'command'=>['addPhoto'],
+			'parameters'=>{
+				'token'=>[$login_resp->{sessionToken}],
+				'albumToken'=>[$album->{albumToken}],
+				'width'=>[$width],
+				'height'=>[$height],
+			}
+		}
+	};
+
+	my $obrazek = $bot->post($api, {'data' => XMLout($newpicture, KeepRoot => 1, XMLDecl => $xmldec),'thumb' => ["$tempdir/thumb.$filename"], 'photo' => ["$tempdir/$filename"]}, Content_Type => 'form-data');
+
+}
+
+my $closealbum  = {'request'=>{
+		'command'=>['closeAlbum'],
+		'parameters'=>{
+			'token'=>[$login_resp->{sessionToken}],
+			'albumToken'=>[$album->{albumToken}],
+		},
+	}
+};
+
+my $zavreno = $bot->post($api, {'data' => XMLout($closealbum, KeepRoot => 1, XMLDecl => $xmldec)});
