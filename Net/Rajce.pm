@@ -12,6 +12,7 @@ use File::Basename;
 use File::Temp qw(tempdir);
 use File::Copy;
 use Image::Size;
+use Encode;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -31,6 +32,8 @@ Rajce - Perl module for rajce.net web API.
 	use Net::Rajce;
 	my $rajce = new Rajce;
 	$rajce->login($mail,$password);
+	my $album = $rajce->create_album('Title','Description');
+	$rajce->add_photo('/path/to/file.jpg',$album)
 						  
 
 =head1 DESCRIPTION
@@ -80,6 +83,9 @@ Login to API.
 	my $response = $self->{BOT}->post($self->{API}, {'data' => XMLout($login, KeepRoot => 1, XMLDecl => $self->{XML})});
 	my $login_resp = XMLin($response->content());
 	$self->{sessionToken}=$login_resp->{sessionToken};
+	$self->{maxWidth}=$login_resp->{maxWidth};
+	$self->{maxHeight}=$login_resp->{maxHeight};
+	$self->{nick}=$login_resp->{nick};
 	return $login_resp;
 }
 
@@ -103,6 +109,29 @@ Get list of albums.
 return XMLin($albums->content());
 }
 
+sub photo_list {
+=item * $rajce->photo_list($albumid);
+Get list of images in album.
+=cut
+	my ($self,$albumid) = @_;
+
+	my $photolist = {'request'=>{
+			'command'=>['getPhotoList'],
+			'parameters'=>{
+				'token'=>[$self->{sessionToken}],
+				'albumID'=>[$albumid],
+				'columns'=>{
+					'column'=>['date','name','description','url','thumbUrl','thumbUrlBest','urlBase']
+				}
+			}
+		}
+	};
+
+	my $photos = $self->{BOT}->post($self->{API}, {'data' => XMLout($photolist, KeepRoot => 1, XMLDecl => $self->{XML})});
+
+return XMLin($photos->content());
+}
+
 sub search_users {
 =item * $rajce->search_users($query,$skip,$limit);
 Get list of users.
@@ -120,7 +149,7 @@ FIXME - not working
 				'columns'=>{
 					'column'=>['fullName', 'albumCount', 'viewCount']
 				}
-			},
+			}
 		}
 	};
 
@@ -128,6 +157,29 @@ FIXME - not working
 
 return XMLin($result->content());
 }
+
+sub get_url {
+=item * $rajce->get_url($target);
+Get some URL from rajce.net
+$target = 'user-profile' | 'email-notifications' | 'service-notifications' ;
+=cut
+	my ($self,$target) = @_;
+
+	my $geturl = {'request'=>{
+			'command'=>['getUrl'],
+			'parameters'=>{
+				'token'=>[$self->{sessionToken}],
+				'target'=>[$target],
+			}
+		}
+	};
+
+	my $result = $self->{BOT}->post($self->{API}, {'data' => XMLout($geturl, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $response = XMLin($result->content());
+
+return $response->{url};
+}
+
 
 sub search_albums {
 =item * $rajce->search_albums($query,$skip,$limit);
@@ -174,6 +226,23 @@ Get URL where is form for creating new account on rajce.net.
 return $reg_form->{url};
 }
 
+sub recover_url {
+=item * $rajce->recover_url();
+Get URL where is form for recover forget password.
+=cut
+	my ($self) = @_;
+
+	my $pass = {'request'=>{
+			'command'=>['getRecoverPasswordUrl']
+		}
+	};
+
+	my $url = $self->{BOT}->post($self->{API}, {'data' => XMLout($pass, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $pass_form = XMLin($url->content());
+
+return $pass_form->{url};
+}
+
 sub create_album {
 =item * $rajce->create_album($title,$desc);
 Create new album.
@@ -184,8 +253,8 @@ Create new album.
 			'command'=>['createAlbum'],
 			'parameters'=>{
 				'token'=>[$self->{sessionToken}],
-				'albumName'=>[$title],
-				'albumDescription'=>[$desc],
+				'albumName'=>[decode("utf8",$title)],
+				'albumDescription'=>[decode("utf8",$desc)],
 				'albumVisible'=>[1],
 			},
 		}
@@ -196,8 +265,8 @@ Create new album.
 return XMLin($album->content());
 }
 
-sub open_album {
-=item * $rajce->open_album($album);
+sub _open_album {
+=item * $rajce->_open_album($album);
 Open album for adding pictures.
 =cut
 	my ($self,$album) = @_;
@@ -216,8 +285,8 @@ Open album for adding pictures.
 return XMLin($open->content());
 }
 
-sub close_album {
-=item * $rajce->close_album($album);
+sub _close_album {
+=item * $rajce->_close_album($album);
 Close album after adding pictures.
 =cut
 	my ($self,$album) = @_;
@@ -245,7 +314,7 @@ Add photo into gallery.
 
 	my $file = basename($filename);
 	copy("$filename","$tempdir/$file");
-	system("convert -auto-orient -strip -resize 800x600\\> \"$tempdir/$file\" \"$tempdir/$file\"\n");
+	system("convert -auto-orient -strip -resize ".$self->{maxWidth}."x".$self->{maxHeight}."\\> \"$tempdir/$file\" \"$tempdir/$file\"\n");
 	my ($width, $height) = imgsize("$tempdir/$file");
 	system("convert -auto-orient -strip -resize 100x100^ -gravity center -extent 100x100 \"$tempdir/$file\" \"$tempdir/thumb.$file\"\n");
 
@@ -260,7 +329,9 @@ Add photo into gallery.
 		}
 	};
 
+	$self->_open_album($album);
 	my $obrazek = $self->{BOT}->post($self->{API}, {'data' => XMLout($newpicture, KeepRoot => 1, XMLDecl => $self->{XML}),'thumb' => ["$tempdir/thumb.$file"], 'photo' => ["$tempdir/$file"]}, Content_Type => 'form-data');
+	$self->_close_album($album);
 
 return XMLin($obrazek->content());
 }
@@ -293,7 +364,7 @@ __END__
 
 =head1 AUTHOR
 
-Petr Kletecka (petr@kle.cz)
+Petr Kletecka (petr _at_ kle.cz)
 
 =head1 COPYRIGHT
 

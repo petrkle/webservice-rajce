@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
 use warnings;
@@ -24,10 +24,6 @@ my $login = $rajce->login($mail,$password);
 
 my $album = $rajce->create_album($opts{t},'');
 
-$rajce->open_album($album);
-
 foreach my $file(@ARGV){
 	$rajce->add_photo($file,$album)
 }
-
-$rajce->close_album($album);
