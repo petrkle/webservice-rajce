@@ -1,7 +1,6 @@
-#!/usr/bin/perl
+package Net::Rajce;
 
-package Rajce;
-
+use 5.006;
 use strict;
 use warnings;
 
@@ -16,9 +15,10 @@ use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 require Exporter;
 
 
-@ISA = qw(Exporter AutoLoader);
-@EXPORT = qw();
-$VERSION = '0.01';
+our @ISA = qw(Exporter AutoLoader);
+our @EXPORT = qw();
+our $VERSION = '0.01';
+
 
 =head1 NAME
 
@@ -43,10 +43,10 @@ This module is interface to rajce.net web API.
 =cut
 
 
-sub new {
 =item * my $rajce = new Rajce;
 Create new object instance.
 =cut
+sub new {
 	my $class = shift;
 	my $self  = {};
 	$self->{API} = 'http://www.rajce.idnes.cz/liveAPI/index.php';
@@ -60,10 +60,10 @@ Create new object instance.
 	return $self;
 }
 
-sub login {
 =item * $rajce->login($mail,$password);
 Login to API.
 =cut
+sub login {
 	my ($self,$mail,$password) = @_;
 
 	my $login = {'request'=>{
@@ -87,10 +87,10 @@ Login to API.
 	return $login_resp;
 }
 
-sub list {
 =item * $rajce->list($userid);
 Get list of albums.
 =cut
+sub list {
 	my ($self,$userid) = @_;
 
 	my $listalbums = {'request'=>{
@@ -108,10 +108,10 @@ Get list of albums.
 return XMLin($albums->content());
 }
 
-sub photo_list {
 =item * $rajce->photo_list($albumid);
 Get list of images in album.
 =cut
+sub photo_list {
 	my ($self,$albumid) = @_;
 
 	my $photolist = {'request'=>{
@@ -139,11 +139,11 @@ Get list of images in album.
 return XMLin($photos->content());
 }
 
-sub search_users {
 =item * $rajce->search_users($query,$skip,$limit);
 Get list of users.
 FIXME - not working
 =cut
+sub search_users {
 	my ($self,$query,$skip,$limit) = @_;
 
 	my $users = {'request'=>{
@@ -169,11 +169,11 @@ FIXME - not working
 return XMLin($result->content());
 }
 
-sub get_url {
 =item * $rajce->get_url($target);
 Get some URL from rajce.net
 $target = 'user-profile' | 'email-notifications' | 'service-notifications' ;
 =cut
+sub get_url {
 	my ($self,$target) = @_;
 
 	my $geturl = {'request'=>{
@@ -193,11 +193,11 @@ return $response->{url};
 }
 
 
-sub search_albums {
 =item * $rajce->search_albums($query,$skip,$limit);
 Get list of users.
 FIXME - not working
 =cut
+sub search_albums {
 	my ($self,$query,$skip,$limit) = @_;
 
 	my $albums = {'request'=>{
@@ -227,10 +227,10 @@ return XMLin($result->content());
 }
 
 
-sub reg_url {
 =item * $rajce->reg_url();
 Get URL where is form for creating new account on rajce.net.
 =cut
+sub reg_url {
 	my ($self) = @_;
 
 	my $reg = {'request'=>{
@@ -245,10 +245,10 @@ Get URL where is form for creating new account on rajce.net.
 return $reg_form->{url};
 }
 
-sub recover_url {
 =item * $rajce->recover_url();
 Get URL where is form for recover forget password.
 =cut
+sub recover_url {
 	my ($self) = @_;
 
 	my $pass = {'request'=>{
@@ -263,10 +263,10 @@ Get URL where is form for recover forget password.
 return $pass_form->{url};
 }
 
-sub create_album {
 =item * $rajce->create_album($title,$desc);
 Create new album.
 =cut
+sub create_album {
 	my ($self,$title,$desc) = @_;
 
 	my $create = {'request'=>{
@@ -286,10 +286,10 @@ Create new album.
 return XMLin($album->content());
 }
 
-sub _open_album {
 =item * $rajce->_open_album($album);
 Open album for adding pictures.
 =cut
+sub _open_album {
 	my ($self,$album) = @_;
 
 	my $create = {'request'=>{
@@ -307,10 +307,10 @@ Open album for adding pictures.
 return XMLin($open->content());
 }
 
-sub _close_album {
 =item * $rajce->_close_album($album);
 Close album after adding pictures.
 =cut
+sub _close_album {
 	my ($self,$album) = @_;
 
 	my $create = {'request'=>{
@@ -328,10 +328,10 @@ Close album after adding pictures.
 return XMLin($open->content());
 }
 
-sub add_photo {
 =item * $rajce->add_photo($filename,$album);
 Add photo into gallery.
 =cut
+sub add_photo {
 	my ($self,$filename,$album) = @_;
 
 	my $thumbsize = "100x100";
@@ -373,10 +373,10 @@ Add photo into gallery.
 return XMLin($obrazek->content());
 }
 
-sub get_albumurl {
 =item * $rajce->get_albumurl($album);
 Get URL of album.
 =cut
+sub get_albumurl {
 	my ($self,$album) = @_;
 
 	my $url = {'request'=>{
@@ -397,19 +397,63 @@ return $response->{url};
 
 1;
 __END__
-
 =back
 
 =head1 AUTHOR
 
-Petr Kletecka (petr _at_ kle.cz)
+Petr Kletecka, C<< <petr at kle.cz> >>
 
-=head1 COPYRIGHT
+=head1 BUGS
 
-Copyright 2011 Petr Kletecka. All rights reserved.
+Please report any bugs or feature requests to C<bug-net-rajce at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Net-Rajce>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
 
-This library is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Net::Rajce
+
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker (report bugs here)
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net-Rajce>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Net-Rajce>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/Net-Rajce>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Net-Rajce/>
+
+=back
+
+
+=head1 ACKNOWLEDGEMENTS
+
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2011 Petr Kletecka.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+
+=cut
 
 =head1 SEE ALSO
 
@@ -417,3 +461,4 @@ www.rajce.net
 http://goo.gl/34P9B - API doc
 
 =cut
+1;
