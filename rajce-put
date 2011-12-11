@@ -8,11 +8,16 @@ use Net::Netrc;
 use Net::Rajce;
 
 my %opts;
-getopt('t:', \%opts);  
+getopt('t:d:', \%opts);  
 
 if(!@ARGV or !$opts{t}){
-	print "Usage: rajce-put -t 'Title' file.jpg file2.jpg ...\n";
+	print "Usage: rajce-put -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...\n";
 	exit;
+}
+
+my $desc = '';
+if($opts{d}){
+	$desc = $opts{d};
 }
 
 my $rajce = new Rajce;
@@ -22,7 +27,7 @@ my ($mail, $password, $account) = $mach->lpa;
 
 my $login = $rajce->login($mail,$password);
 
-my $album = $rajce->create_album($opts{t},'');
+my $album = $rajce->create_album($opts{t},$desc);
 
 foreach my $file(@ARGV){
 	$rajce->add_photo($file,$album)
