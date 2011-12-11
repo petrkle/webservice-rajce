@@ -27,7 +27,7 @@ Rajce - Perl module for rajce.net web API.
 =head1 SYNOPSIS
 
 	use Net::Rajce;
-	my $rajce = new Rajce;
+	my $rajce = new Net::Rajce;
 	$rajce->login($mail,$password);
 	my $album = $rajce->create_album('Title','Description');
 	$rajce->add_photo('/path/to/file.jpg',$album)
@@ -43,7 +43,7 @@ This module is interface to rajce.net web API.
 =cut
 
 
-=item * my $rajce = new Rajce;
+=item * my $rajce = new Net::Rajce;
 Create new object instance.
 =cut
 sub new {
@@ -405,9 +405,7 @@ Petr Kletecka, C<< <petr at kle.cz> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-net-rajce at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Net-Rajce>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests to C<petr at kle.cz>
 
 =head1 SUPPORT
 
@@ -418,29 +416,7 @@ You can find documentation for this module with the perldoc command.
 
 You can also look for information at:
 
-=over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net-Rajce>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Net-Rajce>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Net-Rajce>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Net-Rajce/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
+https://github.com/petrkle/rajce
 
 =head1 LICENSE AND COPYRIGHT
 

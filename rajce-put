@@ -20,7 +20,7 @@ if($opts{d}){
 	$desc = $opts{d};
 }
 
-my $rajce = new Rajce;
+my $rajce = new Net::Rajce;
 
 my $mach = Net::Netrc->lookup($rajce->{API});
 my ($mail, $password, $account) = $mach->lpa;
