@@ -8,11 +8,8 @@ use warnings;
 use WWW::Mechanize;
 use XML::Simple;
 use Digest::MD5 qw(md5_hex);
-use File::Basename;
-use File::Temp qw(tempdir);
-use File::Copy;
-use Image::Size;
 use Encode;
+use Image::Magick;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
@@ -80,7 +77,8 @@ Login to API.
 			},
 		}
 	};
-	my $response = $self->{BOT}->post($self->{API}, {'data' => XMLout($login, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $response = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($login, KeepRoot => 1, XMLDecl => $self->{XML})});
 	my $login_resp = XMLin($response->content());
 	$self->{sessionToken}=$login_resp->{sessionToken};
 	$self->{maxWidth}=$login_resp->{maxWidth};
@@ -104,7 +102,8 @@ Get list of albums.
 		}
 	};
 
-	my $albums = $self->{BOT}->post($self->{API}, {'data' => XMLout($listalbums, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $albums = $self->{BOT}->post($self->{API},
+	 {'data' => XMLout($listalbums, KeepRoot => 1, XMLDecl => $self->{XML})});
 
 return XMLin($albums->content());
 }
@@ -121,13 +120,21 @@ Get list of images in album.
 				'token'=>[$self->{sessionToken}],
 				'albumID'=>[$albumid],
 				'columns'=>{
-					'column'=>['date','name','description','url','thumbUrl','thumbUrlBest','urlBase']
+					'column'=>[
+						'date',
+						'name',
+						'description',
+						'url',
+						'thumbUrl',
+						'thumbUrlBest',
+						'urlBase']
 				}
 			}
 		}
 	};
 
-	my $photos = $self->{BOT}->post($self->{API}, {'data' => XMLout($photolist, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $photos = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($photolist, KeepRoot => 1, XMLDecl => $self->{XML})});
 
 return XMLin($photos->content());
 }
@@ -147,13 +154,17 @@ FIXME - not working
 				'skip'=>[$skip],
 				'limit'=>[$limit],
 				'columns'=>{
-					'column'=>['fullName', 'albumCount', 'viewCount']
+					'column'=>[
+					'fullName',
+					'albumCount',
+					'viewCount']
 				}
 			}
 		}
 	};
 
-	my $result = $self->{BOT}->post($self->{API}, {'data' => XMLout($users, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $result = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($users, KeepRoot => 1, XMLDecl => $self->{XML})});
 
 return XMLin($result->content());
 }
@@ -174,7 +185,8 @@ $target = 'user-profile' | 'email-notifications' | 'service-notifications' ;
 		}
 	};
 
-	my $result = $self->{BOT}->post($self->{API}, {'data' => XMLout($geturl, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $result = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($geturl, KeepRoot => 1, XMLDecl => $self->{XML})});
 	my $response = XMLin($result->content());
 
 return $response->{url};
@@ -196,14 +208,20 @@ FIXME - not working
 				'skip'=>[$skip],
 				'limit'=>[$limit],
 				'columns'=>{
-					'column'=>['description','shortenedDescription','viewCount','mediaCount','createDate']
+					'column'=>[
+						'description',
+						'shortenedDescription',
+						'viewCount',
+						'mediaCount',
+						'createDate']
 				}
 			},
 		}
 	};
 
 	print Dumper(XMLout($albums, KeepRoot => 1, XMLDecl => $self->{XML}));
-	my $result = $self->{BOT}->post($self->{API}, {'data' => XMLout($albums, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $result = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($albums, KeepRoot => 1, XMLDecl => $self->{XML})});
 
 return XMLin($result->content());
 }
@@ -220,7 +238,8 @@ Get URL where is form for creating new account on rajce.net.
 		}
 	};
 
-	my $regurl = $self->{BOT}->post($self->{API}, {'data' => XMLout($reg, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $regurl = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($reg, KeepRoot => 1, XMLDecl => $self->{XML})});
 	my $reg_form = XMLin($regurl->content());
 
 return $reg_form->{url};
@@ -237,7 +256,8 @@ Get URL where is form for recover forget password.
 		}
 	};
 
-	my $url = $self->{BOT}->post($self->{API}, {'data' => XMLout($pass, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $url = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($pass, KeepRoot => 1, XMLDecl => $self->{XML})});
 	my $pass_form = XMLin($url->content());
 
 return $pass_form->{url};
@@ -260,7 +280,8 @@ Create new album.
 		}
 	};
 
-	my $album = $self->{BOT}->post($self->{API}, {'data' => XMLout($create, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $album = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($create, KeepRoot => 1, XMLDecl => $self->{XML})});
 
 return XMLin($album->content());
 }
@@ -280,7 +301,8 @@ Open album for adding pictures.
 		}
 	};
 
-	my $open = $self->{BOT}->post($self->{API}, {'data' => XMLout($create, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $open = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($create, KeepRoot => 1, XMLDecl => $self->{XML})});
 
 return XMLin($open->content());
 }
@@ -300,7 +322,8 @@ Close album after adding pictures.
 		}
 	};
 
-	my $open = $self->{BOT}->post($self->{API}, {'data' => XMLout($create, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $open = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($create, KeepRoot => 1, XMLDecl => $self->{XML})});
 
 return XMLin($open->content());
 }
@@ -310,14 +333,24 @@ sub add_photo {
 Add photo into gallery.
 =cut
 	my ($self,$filename,$album) = @_;
-	my $tempdir = tempdir('rajce.tempXXXXX', CLEANUP => 1);
 
-	my $file = basename($filename);
-	copy("$filename","$tempdir/$file");
-	system("convert -auto-orient -strip -resize ".$self->{maxWidth}."x".$self->{maxHeight}."\\> \"$tempdir/$file\" \"$tempdir/$file\"\n");
-	my ($width, $height) = imgsize("$tempdir/$file");
-	system("convert -auto-orient -strip -resize 100x100^ -gravity center -extent 100x100 \"$tempdir/$file\" \"$tempdir/thumb.$file\"\n");
+	my $thumbsize = "100x100";
 
+	my $thumb = new Image::Magick;
+	$thumb->Read($filename);
+	$thumb->AutoOrient();
+	$thumb->Resize(geometry=>"$thumbsize^");
+	$thumb->Crop(gravity=>"Center",geometry=>"$thumbsize");
+	$thumb->Strip();
+
+	my $pic = new Image::Magick;
+	$pic->Read($filename);
+	$pic->AutoOrient();
+	$pic->Resize(geometry=>"$self->{maxWidth}x$self->{maxHeight}>");
+	$pic->Strip();
+
+	my ($width, $height) = $pic->Get('width','height');
+	
 	my $newpicture = {'request'=>{
 			'command'=>['addPhoto'],
 			'parameters'=>{
@@ -330,7 +363,11 @@ Add photo into gallery.
 	};
 
 	$self->_open_album($album);
-	my $obrazek = $self->{BOT}->post($self->{API}, {'data' => XMLout($newpicture, KeepRoot => 1, XMLDecl => $self->{XML}),'thumb' => ["$tempdir/thumb.$file"], 'photo' => ["$tempdir/$file"]}, Content_Type => 'form-data');
+	my $obrazek = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($newpicture, KeepRoot => 1,	XMLDecl => $self->{XML}),
+			'thumb' => [undef,$filename,Content => $thumb->ImageToBlob()],
+			'photo' => [undef,$filename,Content => $pic->ImageToBlob()]},
+		Content_Type => 'form-data');
 	$self->_close_album($album);
 
 return XMLin($obrazek->content());
@@ -351,7 +388,8 @@ Get URL of album.
 		}
 	};
 
-	my $alb = $self->{BOT}->post($self->{API}, {'data' => XMLout($url, KeepRoot => 1, XMLDecl => $self->{XML})});
+	my $alb = $self->{BOT}->post($self->{API},
+		{'data' => XMLout($url, KeepRoot => 1, XMLDecl => $self->{XML})});
 	my $response = XMLin($alb->content());
 
 return $response->{url};
