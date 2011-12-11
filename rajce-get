@@ -3,7 +3,7 @@
 use strict;
 use WWW::Mechanize;
 use File::Basename;
-use File::Path qw(make_path);
+use File::Path 2.06_05 qw(make_path);
 
 my $vzor="^http:\/\/(.*)\.rajce\.idnes\.cz\/(.*)";
 
