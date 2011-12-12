@@ -1,9 +1,16 @@
+bin/rajce-get
+bin/rajce-put
+Build.PL
 Changes
+ignore.txt
 lib/WebService/Rajce.pm
-Makefile.PL
 MANIFEST			This list of files
 README
 t/00-load.t
+t/boilerplate.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
+Makefile.PL
+META.yml
+META.json

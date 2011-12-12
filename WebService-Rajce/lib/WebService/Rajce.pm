@@ -401,11 +401,11 @@ __END__
 
 =head1 AUTHOR
 
-Petr Kletecka, C<< <petr at kle.cz> >>
+Petr Kletecka, C<< <pek at cpan.org> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<petr at kle.cz>
+Please report any bugs or feature requests to C<pek at cpan.org>
 
 =head1 SUPPORT
 
