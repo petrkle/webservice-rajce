@@ -1,4 +1,4 @@
-package Net::Rajce;
+package WebService::Rajce;
 
 use 5.006;
 use strict;
@@ -26,8 +26,8 @@ Rajce - Perl module for rajce.net web API.
 
 =head1 SYNOPSIS
 
-	use Net::Rajce;
-	my $rajce = new Net::Rajce;
+	use WebService::Rajce;
+	my $rajce = new WebService::Rajce;
 	$rajce->login($mail,$password);
 	my $album = $rajce->create_album('Title','Description');
 	$rajce->add_photo('/path/to/file.jpg',$album)
@@ -43,7 +43,7 @@ This module is interface to rajce.net web API.
 =cut
 
 
-=item * my $rajce = new Net::Rajce;
+=item * my $rajce = new WebService::Rajce;
 Create new object instance.
 =cut
 sub new {
@@ -411,7 +411,7 @@ Please report any bugs or feature requests to C<petr at kle.cz>
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Net::Rajce
+    perldoc WebService::Rajce
 
 
 You can also look for information at:

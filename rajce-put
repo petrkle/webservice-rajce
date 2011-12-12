@@ -5,7 +5,7 @@ use warnings;
 
 use Getopt::Std;
 use Net::Netrc;
-use Net::Rajce;
+use WebService::Rajce;
 
 my %opts;
 getopt('t:d:', \%opts);  
@@ -20,7 +20,7 @@ if($opts{d}){
 	$desc = $opts{d};
 }
 
-my $rajce = new Net::Rajce;
+my $rajce = new WebService::Rajce;
 
 my $mach = Net::Netrc->lookup($rajce->{API});
 my ($mail, $password, $account) = $mach->lpa;

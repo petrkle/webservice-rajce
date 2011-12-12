@@ -4,9 +4,9 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME                => 'Net::Rajce',
+    NAME                => 'WebService::Rajce',
     AUTHOR              => q{Petr Kletecka <petr@kle.cz>},
-    VERSION_FROM        => 'lib/Net/Rajce.pm',
+    VERSION_FROM        => 'lib/WebService/Rajce.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'perl')
       : ()),
@@ -15,5 +15,5 @@ WriteMakefile(
         'Test::More' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Net-Rajce-*' },
+    clean               => { FILES => 'WebService-Rajce-*' },
 );

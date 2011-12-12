@@ -18,7 +18,7 @@ SUPPORT AND DOCUMENTATION
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc Net::Rajce
+    perldoc WebService::Rajce
 
 You can also look for information at:
 
