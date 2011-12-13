@@ -1,0 +1,28 @@
+---
+abstract: 'Perl module for rajce.net web API.'
+author:
+  - 'Petr Kletecka <pek@cpan.org>'
+build_requires:
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.38
+dynamic_config: 1
+generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.110440'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: WebService-Rajce
+provides:
+  WebService::Rajce:
+    file: lib/WebService/Rajce.pm
+    version: 0.01
+requires:
+  File::Basename: 1.2
+  File::Path: 2.0605
+  Getopt::Std: 0
+  Net::Netrc: 1.22
+  WWW::Mechanize: 1.5
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.01
