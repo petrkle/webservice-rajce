@@ -16,13 +16,17 @@ name: WebService-Rajce
 provides:
   WebService::Rajce:
     file: lib/WebService/Rajce.pm
-    version: 0.01
+    version: 0.02
 requires:
+  Digest::MD5: 0
+  Encode: 0
   File::Basename: 1.2
   File::Path: 2.0605
   Getopt::Std: 0
+  Image::Magick: 0
   Net::Netrc: 1.22
   WWW::Mechanize: 1.5
+  XML::Simple: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01
+version: 0.02

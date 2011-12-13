@@ -17,7 +17,7 @@ require Exporter;
 
 our @ISA = qw(Exporter AutoLoader);
 our @EXPORT = qw();
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 NAME

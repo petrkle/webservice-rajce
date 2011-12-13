@@ -8,6 +8,9 @@ Module::Build
 				 dist_author         => 'Petr Kletecka <pek@cpan.org>',
 				 dist_version_from   => 'lib/WebService/Rajce.pm',
 
+				 configure_requires => {
+					 'Module::Build' => 0.38 
+				 },
          build_requires => {
              'Test::More'       => 0,
          },
@@ -17,6 +20,10 @@ Module::Build
              'File::Basename'	=> 1.2,
              'Getopt::Std'		=> 0,
              'Net::Netrc'		=> 1.22,
+             'XML::Simple'		=> 0,
+             'Encode'		=> 0,
+             'Image::Magick'		=> 0,
+             'Digest::MD5'		=> 0,
          },
          create_makefile_pl => 'traditional',
        )

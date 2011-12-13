@@ -11,11 +11,15 @@ WriteMakefile
                  ],
   'VERSION_FROM' => 'lib/WebService/Rajce.pm',
   'PREREQ_PM' => {
-                   'Test::More' => 0,
                    'Getopt::Std' => 0,
                    'WWW::Mechanize' => '1.5',
-                   'File::Path' => '2.0605',
+                   'XML::Simple' => 0,
                    'Net::Netrc' => '1.22',
+                   'Image::Magick' => 0,
+                   'Encode' => 0,
+                   'Test::More' => 0,
+                   'Digest::MD5' => 0,
+                   'File::Path' => '2.0605',
                    'File::Basename' => '1.2'
                  }
 )
