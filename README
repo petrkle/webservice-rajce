@@ -1,0 +1,27 @@
+Perl tools for www.rajce.idnes.cz.
+
+INSTALL
+=======
+
+sudo cpan WebService::Rajce
+
+
+USAGE
+=====
+
+rajce-get [-v] -u http://username.rajce.idnes.cz/album
+rajce-put [-v] [-D] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
+
+
+MORE INFO
+=========
+
+man rajce-get
+man rajce-put
+
+
+SEE ALSO
+========
+Rajce API - http://docs.google.com/View?id=ajkd99k8zcw6_120ctqvnjd5
+CPAN - http://search.cpan.org/perldoc?WebService::Rajce
+Source - https://github.com/petrkle/rajce

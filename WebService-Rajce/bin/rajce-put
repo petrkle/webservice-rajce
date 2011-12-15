@@ -6,29 +6,103 @@ use warnings;
 use Getopt::Std;
 use Net::Netrc;
 use WebService::Rajce;
+use Pod::Usage;
 
-my %opts;
-getopt('t:d:', \%opts);  
+$|++;
 
-if(!@ARGV or !$opts{t}){
-	print "Usage: rajce-put -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...\n";
-	exit;
+my %opt;
+getopts('vDt:d:', \%opt);  
+
+if(!@ARGV or !$opt{t}){
+	pod2usage(-verbose => 2);
+	exit(1);
 }
 
 my $desc = '';
-if($opts{d}){
-	$desc = $opts{d};
+if($opt{d}){
+	$desc = $opt{d};
 }
 
-my $rajce = new WebService::Rajce;
+my $rajce = new WebService::Rajce('debug'=>$opt{D});
 
-my $mach = Net::Netrc->lookup($rajce->{API});
-my ($mail, $password, $account) = $mach->lpa;
+my $user = Net::Netrc->lookup($rajce->{API})
+	or die "Cant find $rajce->{API} in \$HOME/.netrc";
 
-my $login = $rajce->login($mail,$password);
+info("Login to rajce.net ...",%opt);
+my $login = $rajce->login($user->login,$user->password)
+	or die "Bad username or password.";
+info(" OK\n",%opt);
 
-my $album = $rajce->create_album($opts{t},$desc);
+info("Create new album ...",%opt);
+my $album = $rajce->create_album($opt{t},$desc)
+	or die "Failed to create new album";
+info(" OK\n",%opt);
 
 foreach my $file(@ARGV){
+	info("Uploading $file ...",%opt);
 	$rajce->add_photo($file,$album)
+		or die "Failed add file $file";
+	info(" OK\n",%opt);
 }
+
+sub info{
+	my ($message,%opt) = @_;
+	if($opt{v}){
+		print "$message";
+	}
+}
+__END__
+=head1 NAME
+rajce-put
+
+Upload images to rajce.net.
+
+=head1 SYNOPSIS
+rajce-put [-v] [-D] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
+
+ Options:
+	 -v - Verbose mode
+	 -D - Debugging messages
+	 -t - Specify title of album
+	 -d - Description of album
+
+=head1 DESCRIPTION
+
+This program will upload images to rajce.net. Before you start uploading
+add entry to $HOME/.netrc
+
+Something like this:
+
+machine http://www.rajce.idnes.cz/liveAPI/index.php login mail@example.com password nbu123
+
+Set the correct access rights:
+
+$ chmod 700 $HOME/.netrc
+
+=head1 AUTHOR
+
+Petr Kletecka, C<< <pek at cpan.org> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<pek at cpan.org>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2011 Petr Kletecka.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+=cut
+
+=head1 SEE ALSO
+
+For creating account visit: www.rajce.net/ucet
+http://goo.gl/34P9B - API doc
+http://search.cpan.org/perldoc?WebService::Rajce
+
+=cut

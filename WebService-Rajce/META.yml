@@ -7,7 +7,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.38
 dynamic_config: 1
-generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.110440'
+generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.112621'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -16,8 +16,9 @@ name: WebService-Rajce
 provides:
   WebService::Rajce:
     file: lib/WebService/Rajce.pm
-    version: 0.02
+    version: 0.03
 requires:
+  Carp: 0
   Digest::MD5: 0
   Encode: 0
   File::Basename: 1.2
@@ -25,8 +26,9 @@ requires:
   Getopt::Std: 0
   Image::Magick: 0
   Net::Netrc: 1.22
+  Pod::Usage: 0
   WWW::Mechanize: 1.5
   XML::Simple: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.02
+version: 0.03

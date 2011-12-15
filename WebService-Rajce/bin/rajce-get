@@ -2,23 +2,25 @@
 
 use warnings;
 use strict;
+use Getopt::Std;
 use WWW::Mechanize;
 use File::Basename;
 use File::Path 2.06_05 qw(make_path);
+use Pod::Usage;
 
-my $vzor="^http:\/\/(.*)\.rajce\.idnes\.cz\/(.*)";
+my $url_pattern="^http:\/\/(.*)\.rajce\.idnes\.cz\/(.*)";
 
-if(!@ARGV or $ARGV[0] !~ /$vzor/){
-	print "Usage:\n";
-	print "$0 http://uzivatel.rajce.idnes.cz/nazevalba/\n";
-	exit;
+$|++;
+
+my %opt;
+getopts('vu:', \%opt);  
+
+if(!$opt{u} or $opt{u} !~ /$url_pattern/){
+	pod2usage(-verbose => 2);
+	exit(1);
 }
 
-my $username = $ARGV[0];
-$username =~ s/$vzor/$1/;
-
-my $album = $ARGV[0];
-$album =~ s/$vzor/$2/;
+my ($username,$album) = $opt{u} =~ $url_pattern;
 
 my $url = "http://$username.rajce.idnes.cz/$album";
 
@@ -33,9 +35,64 @@ $storageurl =~ s/.*var storage = "([^"]*)";.*/$1/s;
 
 my @images = $bot->find_all_links(tag => "a", url_regex => qr/$storageurl/ );
 
-make_path("$username/$album");
+my $outdir = "$username/$album";
+
+info("Creating directory $outdir\n",%opt);
+make_path($outdir);
 
 foreach my $imglink (@images){
-	$bot->get($imglink->url, ':content_file' => "$username/$album/".basename($imglink->url()) );
+	info("Downloding ".basename($imglink->url())." ...",%opt);
+	$bot->get($imglink->url, ':content_file' => "$outdir/".basename($imglink->url()) );
 	sleep 1;
+	info(" OK\n",%opt);
 }
+
+sub info{
+	my ($message,%opt) = @_;
+	if($opt{v}){
+		print "$message";
+	}
+}
+__END__
+=head1 NAME
+rajce-get
+
+Download images from rajce.net.
+
+=head1 SYNOPSIS
+rajce-get [-v] -u URL
+
+ Options:
+	 -v - Verbose mode
+	 -u http://username.rajce.idnes.cz/album - Address of requested album
+
+=head1 DESCRIPTION
+
+This program will download images from rajce.net. Images are saved in
+directory username/album
+
+=head1 AUTHOR
+
+Petr Kletecka, C<< <pek at cpan.org> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<pek at cpan.org>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2011 Petr Kletecka.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+=cut
+
+=head1 SEE ALSO
+
+http://search.cpan.org/perldoc?WebService::Rajce
+
+=cut
