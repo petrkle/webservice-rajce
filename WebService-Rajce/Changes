@@ -1,5 +1,8 @@
 Revision history for Net-Rajce
 
+0.04		Dec 19 2011
+				Proxy support, -h switch.
+
 0.03		Dec 15 2011
 				Debuging and verbose output.
 
