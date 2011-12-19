@@ -62,9 +62,7 @@ sub info{
 __END__
 =head1 NAME
 
-rajce-get
-
-Download images from rajce.net.
+rajce-get - Download images from rajce.net.
 
 =head1 SYNOPSIS
 
