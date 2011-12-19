@@ -13,9 +13,14 @@ $|++;
 my %opt;
 getopts('vDt:d:', \%opt);  
 
-if(!@ARGV or !$opt{t}){
+if($opt{h}){
 	pod2usage(-verbose => 2);
-	exit(1);
+	exit;
+}
+
+if(!@ARGV or !$opt{t}){
+	pod2usage(-verbose => 1);
+	exit;
 }
 
 my $desc = '';
@@ -53,14 +58,18 @@ sub info{
 }
 __END__
 =head1 NAME
+
 rajce-put
 
 Upload images to rajce.net.
 
 =head1 SYNOPSIS
-rajce-put [-v] [-D] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
 
- Options:
+rajce-put [-h] [-v] [-D] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
+
+=head1 OPTIONS AND ARGUMENTS
+
+	 -h - Help
 	 -v - Verbose mode
 	 -D - Debugging messages
 	 -t - Specify title of album
@@ -78,6 +87,10 @@ machine http://www.rajce.idnes.cz/liveAPI/index.php login mail@example.com passw
 Set the correct access rights:
 
 $ chmod 700 $HOME/.netrc
+
+Behind proxy server try set:
+
+export http_proxy=http://your.proxyserver:port
 
 =head1 AUTHOR
 

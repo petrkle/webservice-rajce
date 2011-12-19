@@ -13,11 +13,16 @@ my $url_pattern="^http:\/\/(.*)\.rajce\.idnes\.cz\/(.*)";
 $|++;
 
 my %opt;
-getopts('vu:', \%opt);  
+getopts('hvu:', \%opt);  
 
-if(!$opt{u} or $opt{u} !~ /$url_pattern/){
+if($opt{h}){
 	pod2usage(-verbose => 2);
-	exit(1);
+	exit;
+}
+
+if(!$opt{u} or $opt{u} !~ /$url_pattern/ or $opt{h}){
+	pod2usage(-verbose => 1);
+	exit;
 }
 
 my ($username,$album) = $opt{u} =~ $url_pattern;
@@ -25,6 +30,7 @@ my ($username,$album) = $opt{u} =~ $url_pattern;
 my $url = "http://$username.rajce.idnes.cz/$album";
 
 my $bot = WWW::Mechanize->new(autocheck => 1, agent => 'Mozilla/5.0 (Windows NT 5.0; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0');
+$bot->env_proxy();
 $bot->add_header('Accept-Encoding'=>'text/html');
 $bot->cookie_jar(HTTP::Cookies->new());
 
@@ -55,14 +61,18 @@ sub info{
 }
 __END__
 =head1 NAME
+
 rajce-get
 
 Download images from rajce.net.
 
 =head1 SYNOPSIS
-rajce-get [-v] -u URL
 
- Options:
+rajce-get [-h] [-v] -u URL
+
+=head1 OPTIONS AND ARGUMENTS
+
+	 -h - Help
 	 -v - Verbose mode
 	 -u http://username.rajce.idnes.cz/album - Address of requested album
 
@@ -70,6 +80,10 @@ rajce-get [-v] -u URL
 
 This program will download images from rajce.net. Images are saved in
 directory username/album
+
+Behind proxy server try:
+
+export http_proxy=http://login:password@proxyserver:port
 
 =head1 AUTHOR
 

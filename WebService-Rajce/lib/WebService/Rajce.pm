@@ -55,6 +55,7 @@ sub new {
 	$self->{XML} = '<?xml version="1.0" encoding="utf-8"?>';
 	$self->{DEBUG} = $passed_parms{'debug'};
 	$self->{BOT} = WWW::Mechanize->new(autocheck => 1, agent => 'github.com/petrkle/rajce');
+	$self->{BOT}->env_proxy();
 	$self->{BOT}->add_header('Accept-Encoding'=>'text/html');
 	$self->{BOT}->add_header('Accept-Charset'=>'utf-8');
 	$self->{BOT}->add_header('Accept-Language'=>'cs');
