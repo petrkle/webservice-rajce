@@ -1,5 +1,8 @@
 Revision history for Net-Rajce
 
+0.05		Dec 21 2011
+				Fix -h switch in rajce-put.
+
 0.04		Dec 19 2011
 				Proxy support, -h switch.
 

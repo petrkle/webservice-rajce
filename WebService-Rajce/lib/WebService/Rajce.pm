@@ -18,7 +18,7 @@ require Exporter;
 
 our @ISA = qw(Exporter AutoLoader);
 our @EXPORT = qw();
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 
 =head1 NAME
@@ -45,6 +45,7 @@ This module is interface to rajce.net web API.
 
 
 =item * my $rajce = new WebService::Rajce;
+
 Create new object instance.
 =cut
 sub new {
@@ -98,6 +99,7 @@ sub new {
 }
 
 =item * $rajce->_debug($mesage);
+
 Show debugging message.
 =cut
 sub _debug{
@@ -108,6 +110,7 @@ sub _debug{
 }
 
 =item * $rajce->login($mail,$password);
+
 Login to API.
 =cut
 sub login {
@@ -143,7 +146,9 @@ sub login {
 }
 
 =item * $rajce->list($userid);
+
 Get list of albums.
+NOTICE - list other users albums not implemented in API yet
 =cut
 sub list {
 	my ($self,$userid) = @_;
@@ -166,6 +171,7 @@ return XMLin($albums->content());
 }
 
 =item * $rajce->photo_list($albumid);
+
 Get list of images in album.
 =cut
 sub photo_list {
@@ -199,8 +205,9 @@ return XMLin($photos->content());
 }
 
 =item * $rajce->search_users($query,$skip,$limit);
+
 Get list of users.
-FIXME - not working
+NOTICE - not implemented in API yet
 =cut
 sub search_users {
 	my ($self,$query,$skip,$limit) = @_;
@@ -231,6 +238,7 @@ return XMLin($result->content());
 }
 
 =item * $rajce->get_url($target);
+
 Get some URL from rajce.net
 $target = 'user-profile' | 'email-notifications' | 'service-notifications' ;
 =cut
@@ -257,8 +265,9 @@ return $response->{url};
 
 
 =item * $rajce->search_albums($query,$skip,$limit);
+
 Get list of users.
-FIXME - not working
+NOTICE - not implemented in API yet
 =cut
 sub search_albums {
 	my ($self,$query,$skip,$limit) = @_;
@@ -292,6 +301,7 @@ return XMLin($response->content());
 
 
 =item * $rajce->reg_url();
+
 Get URL where is form for creating new account on rajce.net.
 =cut
 sub reg_url {
@@ -317,6 +327,7 @@ return $response->{url};
 }
 
 =item * $rajce->recover_url();
+
 Get URL where is form for recover forget password.
 =cut
 sub recover_url {
@@ -342,6 +353,7 @@ return $response->{url};
 }
 
 =item * $rajce->create_album($title,$desc);
+
 Create new album.
 =cut
 sub create_album {
@@ -372,6 +384,7 @@ return $response;
 }
 
 =item * $rajce->_open_album($album);
+
 Open album for adding pictures.
 =cut
 sub _open_album {
@@ -401,6 +414,7 @@ return $response;
 }
 
 =item * $rajce->_close_album($album);
+
 Close album after adding pictures.
 =cut
 sub _close_album {
@@ -430,6 +444,7 @@ return $response;
 }
 
 =item * $rajce->add_photo($filename,$album);
+
 Add photo into gallery.
 =cut
 sub add_photo {
@@ -489,6 +504,7 @@ return $response;
 }
 
 =item * $rajce->get_albumurl($album);
+
 Get URL of album.
 =cut
 sub get_albumurl {

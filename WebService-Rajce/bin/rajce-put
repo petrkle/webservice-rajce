@@ -11,7 +11,7 @@ use Pod::Usage;
 $|++;
 
 my %opt;
-getopts('vDt:d:', \%opt);  
+getopts('hvDt:d:', \%opt);  
 
 if($opt{h}){
 	pod2usage(-verbose => 2);
@@ -113,7 +113,9 @@ See http://dev.perl.org/licenses/ for more information.
 =head1 SEE ALSO
 
 For creating account visit: www.rajce.net/ucet
+
 http://goo.gl/34P9B - API doc
+
 http://search.cpan.org/perldoc?WebService::Rajce
 
 =cut
