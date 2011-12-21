@@ -14,12 +14,12 @@ my %opt;
 getopts('hvDt:d:', \%opt);  
 
 if($opt{h}){
-	pod2usage(-verbose => 2);
+	pod2usage(-verbose => 2, -output => '-');
 	exit;
 }
 
 if(!@ARGV or !$opt{t}){
-	pod2usage(-verbose => 1);
+	pod2usage(-verbose => 1, -output => '-');
 	exit;
 }
 
