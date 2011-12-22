@@ -28,5 +28,11 @@ Module::Build
 						 'Carp'						=> 0,
          },
          create_makefile_pl => 'traditional',
+  				meta_merge     => {
+				    resources => {
+				      repository  => 'https://github.com/petrkle/rajce/'
+    				}
+					},
+
        )
   ->create_build_script;

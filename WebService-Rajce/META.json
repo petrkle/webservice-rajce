@@ -43,14 +43,17 @@
    "provides" : {
       "WebService::Rajce" : {
          "file" : "lib/WebService/Rajce.pm",
-         "version" : "0.05"
+         "version" : "0.06"
       }
    },
    "release_status" : "stable",
    "resources" : {
       "license" : [
          "http://dev.perl.org/licenses/"
-      ]
+      ],
+      "repository" : {
+         "url" : "https://github.com/petrkle/rajce/"
+      }
    },
-   "version" : "0.05"
+   "version" : "0.06"
 }
