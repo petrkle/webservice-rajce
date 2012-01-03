@@ -16,7 +16,7 @@ name: WebService-Rajce
 provides:
   WebService::Rajce:
     file: lib/WebService/Rajce.pm
-    version: 0.06
+    version: 0.07
 requires:
   Carp: 0
   Digest::MD5: 0
@@ -32,4 +32,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: https://github.com/petrkle/rajce/
-version: 0.06
+version: 0.07

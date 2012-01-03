@@ -7,16 +7,24 @@ use WWW::Mechanize;
 use File::Basename;
 use File::Path 2.06_05 qw(make_path);
 use Pod::Usage;
+use WebService::Rajce;
 
 my $url_pattern="^http:\/\/(.*)\.rajce\.idnes\.cz\/(.*)";
 
 $|++;
 
 my %opt;
-getopts('hvu:', \%opt);  
+getopts('Vhvu:', \%opt);
+
+my $version = $WebService::Rajce::VERSION;
 
 if($opt{h}){
 	pod2usage(-verbose => 2, -output => '-');
+	exit;
+}
+
+if($opt{V}){
+	print "$version\n";
 	exit;
 }
 
@@ -29,7 +37,7 @@ my ($username,$album) = $opt{u} =~ $url_pattern;
 
 my $url = "http://$username.rajce.idnes.cz/$album";
 
-my $bot = WWW::Mechanize->new(autocheck => 1, agent => 'Mozilla/5.0 (Windows NT 5.0; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0');
+my $bot = WWW::Mechanize->new(autocheck => 1, agent => 'rajce-get/'.$version);
 $bot->env_proxy();
 $bot->add_header('Accept-Encoding'=>'text/html');
 $bot->cookie_jar(HTTP::Cookies->new());
@@ -66,13 +74,14 @@ rajce-get - Download images from rajce.net.
 
 =head1 SYNOPSIS
 
-rajce-get [-h] [-v] -u URL
+rajce-get [-V ] [-h] [-v] -u URL
 
 =head1 OPTIONS AND ARGUMENTS
 
 	 -h - Help
 	 -v - Verbose mode
 	 -u http://username.rajce.idnes.cz/album - Address of requested album
+	 -V - Show version and exit
 
 =head1 DESCRIPTION
 

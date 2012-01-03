@@ -11,10 +11,17 @@ use Pod::Usage;
 $|++;
 
 my %opt;
-getopts('hvDt:d:', \%opt);  
+getopts('VhvDt:d:', \%opt);  
 
 if($opt{h}){
 	pod2usage(-verbose => 2, -output => '-');
+	exit;
+}
+
+my $version = $WebService::Rajce::VERSION;
+
+if($opt{V}){
+	print "$version\n";
 	exit;
 }
 
@@ -63,7 +70,7 @@ rajce-put - Upload images to rajce.net.
 
 =head1 SYNOPSIS
 
-rajce-put [-h] [-v] [-D] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
+rajce-put [-V ] [-h] [-v] [-D] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
 
 =head1 OPTIONS AND ARGUMENTS
 
@@ -72,6 +79,7 @@ rajce-put [-h] [-v] [-D] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
 	 -D - Debugging messages
 	 -t - Specify title of album
 	 -d - Description of album
+	 -V - Show version and exit
 
 =head1 DESCRIPTION
 

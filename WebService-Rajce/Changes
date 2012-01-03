@@ -1,5 +1,7 @@
 Revision history for Net-Rajce
 
+0.07		Jan 03 2012
+				Add -V switch - show version.
 
 0.06		Dec 22 2011
 				Print help to STDOUT.

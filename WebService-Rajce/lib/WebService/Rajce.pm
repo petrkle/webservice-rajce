@@ -18,7 +18,7 @@ require Exporter;
 
 our @ISA = qw(Exporter AutoLoader);
 our @EXPORT = qw();
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 
 =head1 NAME
@@ -55,7 +55,7 @@ sub new {
 	$self->{API} = 'http://www.rajce.idnes.cz/liveAPI/index.php';
 	$self->{XML} = '<?xml version="1.0" encoding="utf-8"?>';
 	$self->{DEBUG} = $passed_parms{'debug'};
-	$self->{BOT} = WWW::Mechanize->new(autocheck => 1, agent => 'github.com/petrkle/rajce');
+	$self->{BOT} = WWW::Mechanize->new(autocheck => 1, agent => 'github.com/petrkle/rajce - '.$VERSION);
 	$self->{BOT}->env_proxy();
 	$self->{BOT}->add_header('Accept-Encoding'=>'text/html');
 	$self->{BOT}->add_header('Accept-Charset'=>'utf-8');

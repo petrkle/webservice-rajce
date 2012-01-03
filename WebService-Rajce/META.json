@@ -43,7 +43,7 @@
    "provides" : {
       "WebService::Rajce" : {
          "file" : "lib/WebService/Rajce.pm",
-         "version" : "0.06"
+         "version" : "0.07"
       }
    },
    "release_status" : "stable",
@@ -55,5 +55,5 @@
          "url" : "https://github.com/petrkle/rajce/"
       }
    },
-   "version" : "0.06"
+   "version" : "0.07"
 }
