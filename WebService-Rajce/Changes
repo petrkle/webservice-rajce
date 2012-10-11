@@ -1,5 +1,8 @@
 Revision history for Net-Rajce
 
+0.08		Oct 11 2012
+				Add -k switch - keep exif data.
+
 0.07		Jan 03 2012
 				Add -V switch - show version.
 

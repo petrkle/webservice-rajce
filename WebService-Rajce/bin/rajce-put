@@ -11,7 +11,7 @@ use Pod::Usage;
 $|++;
 
 my %opt;
-getopts('VhvDt:d:', \%opt);  
+getopts('VhvDkt:d:', \%opt); 
 
 if($opt{h}){
 	pod2usage(-verbose => 2, -output => '-');
@@ -35,7 +35,7 @@ if($opt{d}){
 	$desc = $opt{d};
 }
 
-my $rajce = new WebService::Rajce('debug'=>$opt{D});
+my $rajce = new WebService::Rajce('keep_exif'=>$opt{k},'debug'=>$opt{D});
 
 my $user = Net::Netrc->lookup($rajce->{API})
 	or die "Cant find $rajce->{API} in \$HOME/.netrc";
@@ -70,13 +70,14 @@ rajce-put - Upload images to rajce.net.
 
 =head1 SYNOPSIS
 
-rajce-put [-V ] [-h] [-v] [-D] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
+rajce-put [-V ] [-h] [-v] [-D] [-k] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
 
 =head1 OPTIONS AND ARGUMENTS
 
 	 -h - Help
 	 -v - Verbose mode
 	 -D - Debugging messages
+	 -k - Keep exif data
 	 -t - Specify title of album
 	 -d - Description of album
 	 -V - Show version and exit

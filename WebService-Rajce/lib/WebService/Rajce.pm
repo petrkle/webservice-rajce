@@ -18,7 +18,7 @@ require Exporter;
 
 our @ISA = qw(Exporter AutoLoader);
 our @EXPORT = qw();
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 
 =head1 NAME
@@ -55,6 +55,7 @@ sub new {
 	$self->{API} = 'http://www.rajce.idnes.cz/liveAPI/index.php';
 	$self->{XML} = '<?xml version="1.0" encoding="utf-8"?>';
 	$self->{DEBUG} = $passed_parms{'debug'};
+	$self->{KEEP_EXIF} = $passed_parms{'keep_exif'};
 	$self->{BOT} = WWW::Mechanize->new(autocheck => 1, agent => 'github.com/petrkle/rajce - '.$VERSION);
 	$self->{BOT}->env_proxy();
 	$self->{BOT}->add_header('Accept-Encoding'=>'text/html');
@@ -463,7 +464,10 @@ sub add_photo {
 	$pic->Read($filename);
 	$pic->AutoOrient();
 	$pic->Resize(geometry=>"$self->{maxWidth}x$self->{maxHeight}>");
-	$pic->Strip();
+
+	if(!$self->{KEEP_EXIF}){
+		$pic->Strip();
+	}
 
 	my ($width, $height) = $pic->Get('width','height');
 	
