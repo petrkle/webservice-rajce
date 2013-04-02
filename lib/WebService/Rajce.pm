@@ -1,4 +1,5 @@
 package WebService::Rajce;
+# ABSTRACT: Perl module for rajce.net web API.
 
 use 5.006;
 use strict;
@@ -18,12 +19,6 @@ require Exporter;
 
 our @ISA = qw(Exporter AutoLoader);
 our @EXPORT = qw();
-our $VERSION = '0.08';
-
-
-=head1 NAME
-
-Rajce - Perl module for rajce.net web API.
 
 =head1 SYNOPSIS
 
@@ -32,19 +27,8 @@ Rajce - Perl module for rajce.net web API.
 	$rajce->login($mail,$password);
 	my $album = $rajce->create_album('Title','Description');
 	$rajce->add_photo('/path/to/file.jpg',$album)
-						  
 
-=head1 DESCRIPTION
-
-This module is interface to rajce.net web API.  
-
-=head2 Methods
-
-=over
-=cut
-
-
-=item * my $rajce = new WebService::Rajce;
+=method my $rajce = new WebService::Rajce;
 
 Create new object instance.
 =cut
@@ -99,7 +83,7 @@ sub new {
 	return $self;
 }
 
-=item * $rajce->_debug($mesage);
+=method $rajce->_debug($mesage);
 
 Show debugging message.
 =cut
@@ -110,7 +94,7 @@ sub _debug{
 	}
 }
 
-=item * $rajce->login($mail,$password);
+=method $rajce->login($mail,$password);
 
 Login to API.
 =cut
@@ -146,7 +130,7 @@ sub login {
 	return $response;
 }
 
-=item * $rajce->list($userid);
+=method $rajce->list($userid);
 
 Get list of albums.
 NOTICE - list other users albums not implemented in API yet
@@ -171,7 +155,7 @@ sub list {
 return XMLin($albums->content());
 }
 
-=item * $rajce->photo_list($albumid);
+=method $rajce->photo_list($albumid);
 
 Get list of images in album.
 =cut
@@ -205,7 +189,7 @@ sub photo_list {
 return XMLin($photos->content());
 }
 
-=item * $rajce->search_users($query,$skip,$limit);
+=method $rajce->search_users($query,$skip,$limit);
 
 Get list of users.
 NOTICE - not implemented in API yet
@@ -238,7 +222,7 @@ sub search_users {
 return XMLin($result->content());
 }
 
-=item * $rajce->get_url($target);
+=method $rajce->get_url($target);
 
 Get some URL from rajce.net
 $target = 'user-profile' | 'email-notifications' | 'service-notifications' ;
@@ -265,7 +249,7 @@ return $response->{url};
 }
 
 
-=item * $rajce->search_albums($query,$skip,$limit);
+=method $rajce->search_albums($query,$skip,$limit);
 
 Get list of users.
 NOTICE - not implemented in API yet
@@ -301,7 +285,7 @@ return XMLin($response->content());
 }
 
 
-=item * $rajce->reg_url();
+=method $rajce->reg_url();
 
 Get URL where is form for creating new account on rajce.net.
 =cut
@@ -327,7 +311,7 @@ sub reg_url {
 return $response->{url};
 }
 
-=item * $rajce->recover_url();
+=method $rajce->recover_url();
 
 Get URL where is form for recover forget password.
 =cut
@@ -353,7 +337,7 @@ sub recover_url {
 return $response->{url};
 }
 
-=item * $rajce->create_album($title,$desc);
+=method $rajce->create_album($title,$desc);
 
 Create new album.
 =cut
@@ -384,7 +368,7 @@ sub create_album {
 return $response;
 }
 
-=item * $rajce->_open_album($album);
+=method $rajce->_open_album($album);
 
 Open album for adding pictures.
 =cut
@@ -414,7 +398,7 @@ sub _open_album {
 return $response;
 }
 
-=item * $rajce->_close_album($album);
+=method $rajce->_close_album($album);
 
 Close album after adding pictures.
 =cut
@@ -444,7 +428,7 @@ sub _close_album {
 return $response;
 }
 
-=item * $rajce->add_photo($filename,$album);
+=method $rajce->add_photo($filename,$album);
 
 Add photo into gallery.
 =cut
@@ -507,7 +491,7 @@ sub add_photo {
 return $response;
 }
 
-=item * $rajce->get_albumurl($album);
+=method $rajce->get_albumurl($album);
 
 Get URL of album.
 =cut
@@ -538,43 +522,10 @@ return $response->{url};
 
 1;
 __END__
-=back
-
-=head1 AUTHOR
-
-Petr Kletecka, C<< <pek at cpan.org> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<pek at cpan.org>
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc WebService::Rajce
-
-
-You can also look for information at:
-
-https://github.com/petrkle/rajce
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2011 Petr Kletecka.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
-=cut
 
 =head1 SEE ALSO
 
-www.rajce.net
-http://goo.gl/34P9B - API doc
+http://rajce.net/static/doc/LiveApi.html
 
 =cut
 1;
