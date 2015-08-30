@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+1.152420  2015-08-30 13:41:02CEST+0200 Europe/Prague
+	Add option -s to rajce-get: Prefix output file names with numbers
+	to keep ordering in album. Thanks to Petr Spacek.
+
 1.130930  2013-04-03 22:34:02 Europe/Prague
 	Move to Dist::Zila.
 
