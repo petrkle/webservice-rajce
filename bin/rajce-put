@@ -5,15 +5,25 @@
 use strict;
 use warnings;
 
-use Getopt::Std;
 use Net::Netrc;
 use WebService::Rajce;
 use Pod::Usage;
+use Getopt::Long qw(GetOptions);
+Getopt::Long::Configure qw(gnu_getopt);
 
 $|++;
 
 my %opt;
-getopts('VhvDkt:d:', \%opt); 
+
+GetOptions(
+	't|title=s' => \$opt{t},
+	'd|description=s' => \$opt{d},
+	'k|keep-exif' => \$opt{k},
+	'v|verbose' => \$opt{v},
+	'D|debug' => \$opt{d},
+	'V|version' => \$opt{V},
+	'h|help' => \$opt{h},
+);
 
 if($opt{h}){
 	pod2usage(-verbose => 2, -output => '-');
@@ -69,17 +79,30 @@ __END__
 
 =head1 SYNOPSIS
 
-rajce-put [-V ] [-h] [-v] [-D] [-k] -t 'Title' [ -d 'Description' ] file.jpg file2.jpg ...
+rajce-put [OPTIONS] ... [FILES] ...
 
 =head1 OPTIONS AND ARGUMENTS
 
-	 -h - Help
-	 -v - Verbose mode
-	 -D - Debugging messages
-	 -k - Keep exif data
-	 -t - Specify title of album
-	 -d - Description of album
-	 -V - Show version and exit
+	 -t, --title
+			Specify title of album
+
+	 -d, --description
+			Description of album
+
+	 -k, --keep-exif
+			Keep exif data
+
+	 -v, --verbose
+			Verbose mode
+
+	 -D, --debug
+			Debugging messages
+
+	 -V, --version
+			Show version and exit
+
+	 -h, --help
+			Show help
 
 =head1 DESCRIPTION
 
@@ -97,6 +120,10 @@ $ chmod 700 $HOME/.netrc
 Behind proxy server try set:
 
 export http_proxy=http://your.proxyserver:port
+
+=head1 EXAMPLES
+
+rajce-put -vkt 'Example' --description 'Something' tmp/*.jpg
 
 =head1 SEE ALSO
 

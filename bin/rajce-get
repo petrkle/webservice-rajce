@@ -4,20 +4,28 @@
 
 use warnings;
 use strict;
-use Getopt::Std;
 use WWW::Mechanize;
 use File::Basename;
 use File::Path 2.06_05 qw(make_path);
 use Pod::Usage;
 use POSIX;
 use WebService::Rajce;
+use Getopt::Long qw(GetOptions);
+Getopt::Long::Configure qw(gnu_getopt);
 
 my $url_pattern="^http:\/\/(.*)\.rajce\.idnes\.cz\/(.*)";
 
 $|++;
 
 my %opt;
-getopts('Vhvu:s', \%opt);
+
+GetOptions(
+	'u|url=s' => \$opt{u},
+	's|sorted' => \$opt{s},
+	'v|verbose' => \$opt{v},
+	'V|version' => \$opt{V},
+	'h|help' => \$opt{h},
+);
 
 my $version = $WebService::Rajce::VERSION;
 
@@ -58,7 +66,11 @@ info("Creating directory $outdir\n",%opt);
 make_path($outdir);
 
 # required number of base-10 digits for output name prefix
-my $prefixlen = ceil(log(scalar @images)/log(10));
+my $prefixlen = 0;
+for (split //, scalar @images) {
+	$prefixlen++;
+}
+
 my $outidx = 0;
 foreach my $imglink (@images){
 	my $outname = basename($imglink->url());
@@ -67,7 +79,7 @@ foreach my $imglink (@images){
 	}
 	info("Downloading ".basename($imglink->url())." ...",%opt);
 	$bot->get($imglink->url, ':content_file' => "$outdir/".$outname);
-	$outidx = $outidx + 1;
+	$outidx++;
 	sleep 1;
 	info(" OK\n",%opt);
 }
@@ -82,15 +94,26 @@ __END__
 
 =head1 SYNOPSIS
 
-rajce-get [-V] [-h] [-v] [-s] -u URL
+rajce-get [OPTIONS]
 
 =head1 OPTIONS AND ARGUMENTS
 
-	 -h - Help
-	 -v - Verbose mode
-	 -s - Sort output file names in the same order as they appear in album
-	 -u http://username.rajce.idnes.cz/album - Address of requested album
-	 -V - Show version and exit
+	 -u, --url http://username.rajce.idnes.cz/album
+			Address of requested album
+
+	 -v, --verbose
+			Verbose mode
+
+	 -s, --sorted
+			Sort output file names in the same order as they
+			appear in album
+
+	 -V, --version
+			Show version and exit
+
+	 -h, --help
+			Show help
+
 
 =head1 DESCRIPTION
 
@@ -100,6 +123,10 @@ directory username/album
 Behind proxy server try:
 
 export http_proxy=http://login:password@proxyserver:port
+
+=head1 EXAMPLES
+
+rajce-get --sorted --verbose --url http://username.rajce.idnes.cz/album
 
 =head1 SEE ALSO
 

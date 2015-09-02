@@ -1,6 +1,5 @@
 {{$NEXT}}
-
-1.152420  2015-08-30 13:46:13CEST+0200 Europe/Prague
+	Add long command line switches
 
 1.152420  2015-08-30 13:41:02CEST+0200 Europe/Prague
 	Add option -s to rajce-get: Prefix output file names with numbers
