@@ -83,7 +83,7 @@ sub new {
 	return $self;
 }
 
-=method $rajce->_debug($mesage);
+=method $rajce->_debug($message);
 
 Show debugging message.
 =cut
