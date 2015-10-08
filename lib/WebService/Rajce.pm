@@ -31,6 +31,10 @@ our @EXPORT = qw();
 =method my $rajce = new WebService::Rajce;
 
 Create new object instance.
+
+The C<debug> param turns on debug mode.
+
+The C<keep_exif> param strips EXIF information from uploaded image.
 =cut
 sub new {
 	my $class = shift;
@@ -83,7 +87,7 @@ sub new {
 	return $self;
 }
 
-=method $rajce->_debug($mesage);
+=method $rajce->_debug($message);
 
 Show debugging message.
 =cut
