@@ -34,7 +34,7 @@ Create new object instance.
 
 The C<debug> param turns on debug mode.
 
-The C<keep_exif> param strips EXIF information from uploaded image.
+The C<keep_exif> param keep EXIF information in uploaded image.
 =cut
 sub new {
 	my $class = shift;
