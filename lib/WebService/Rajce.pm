@@ -40,7 +40,7 @@ sub new {
 	my $class = shift;
   my %passed_parms = @_;
 	my $self  = {};
-	$self->{API} = 'http://www.rajce.idnes.cz/liveAPI/index.php';
+	$self->{API} = 'https://www.rajce.idnes.cz/liveAPI/index.php';
 	$self->{XML} = '<?xml version="1.0" encoding="utf-8"?>';
 	$self->{DEBUG} = $passed_parms{'debug'};
 	$self->{KEEP_EXIF} = $passed_parms{'keep_exif'};
@@ -529,7 +529,7 @@ __END__
 
 =head1 SEE ALSO
 
-http://rajce.net/static/doc/LiveApi.html
+https://rajce.net/static/doc/LiveApi.html
 
 =cut
 1;
